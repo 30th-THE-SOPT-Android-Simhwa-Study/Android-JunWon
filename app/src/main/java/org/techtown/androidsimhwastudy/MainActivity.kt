@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import coil.load
 import org.techtown.androidsimhwastudy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -16,22 +19,45 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        onClickProfileImage()
+        setOnClickProfileImage()
+        setOnClickMinhoButton()
+        setOnClickJkButton()
     }
 
-    private fun onClickProfileImage() {
+    private fun setOnClickProfileImage() {
         binding.ivProfile.setOnClickListener {
             CountThread().start()
         }
     }
 
+    private fun setOnClickMinhoButton() {
+        binding.btnMinHo.setOnClickListener {
+            binding.ivProfile.visibility = View.INVISIBLE
+            binding.pgbSearch.visibility = View.VISIBLE
+            MinhoThread().start()
+        }
+    }
+
+    private fun setOnClickJkButton() {
+        binding.btnJoonKyung.setOnClickListener {
+            binding.ivProfile.visibility = View.INVISIBLE
+            binding.pgbSearch.visibility = View.VISIBLE
+            JkThread().start()
+        }
+    }
+
     inner class MyHandler : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
-            // 다른 Thread에서 전달받은 Message 처리
             when (msg.what) {
                 MSG_CNT -> {
                     binding.tvCnt.text = msg.arg1.toString()
                 }
+                MSG_IMAGE -> {
+                    binding.ivProfile.load(msg.obj)
+                    binding.ivProfile.visibility = View.VISIBLE
+                    binding.pgbSearch.visibility = View.INVISIBLE
+                }
+                else -> Log.e(TAG, "handleMessage: ${msg.what}")
             }
         }
     }
@@ -49,8 +75,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    inner class MinhoThread : Thread() {
+        override fun run() {
+            val message = Message().apply {
+                what = MSG_IMAGE
+                obj = "https://avatars.githubusercontent.com/u/90037701?v=4"
+            }
+            sleep(3000L)
+            myHandler.sendMessage(message)
+        }
+    }
+
+    inner class JkThread : Thread() {
+        override fun run() {
+            val message = Message().apply {
+                what = MSG_IMAGE
+                obj = "https://avatars.githubusercontent.com/u/90037701?v=4"
+            }
+            sleep(3000L)
+            myHandler.sendMessage(message)
+        }
+    }
+
     companion object {
         const val MSG_CNT = 1
+        const val MSG_IMAGE = 2
         const val TAG = "로그"
     }
 }
