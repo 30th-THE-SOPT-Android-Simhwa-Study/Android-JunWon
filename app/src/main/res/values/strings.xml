@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">AndroidSimhwaStudy</string>
+    <string name="count">숫자를 세어보자!!</string>
+    <string name="min_ho">민호</string>
+    <string name="joon_kyung">준경</string>
 </resources>
