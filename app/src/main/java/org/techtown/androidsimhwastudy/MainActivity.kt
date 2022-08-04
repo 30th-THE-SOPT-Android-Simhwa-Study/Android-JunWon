@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity() {
 
     class JkThread(
         private val myHandler: MyHandler,
-        private var buttonState: ThreadState,
+        private var threadState: ThreadState,
         private val getBitmapFromURL: (String) -> Bitmap?,
         private val converter: BitmapConverter
     ) : Thread() {
@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                 data = bundle
             }
             sleep(3000L)
-            buttonState.isRunning = true
+            threadState.isRunning = true
             myHandler.sendMessage(message)
         }
     }
