@@ -28,8 +28,8 @@ class MainActivity : AppCompatActivity() {
     private val myHandler: MyHandler by lazy {
         MyHandler(binding, bitmapConverter)
     }
-    private var buttonState = ViewState(true)
-    private var profileState = ViewState(true)
+    private var buttonState = ThreadState(true)
+    private var profileState = ThreadState(true)
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnClickProfileImage() {
         binding.ivProfile.setOnClickListener {
-            if (profileState.isClicked) {
-                profileState.isClicked = false
+            if (profileState.isRunning) {
+                profileState.isRunning = false
                 CountThread(myHandler, profileState).start()
             }
         }
@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnClickMinhoButton() {
         binding.btnMinHo.setOnClickListener {
-            if (buttonState.isClicked) {
-                buttonState.isClicked = false
+            if (buttonState.isRunning) {
+                buttonState.isRunning = false
                 binding.ivProfile.visibility = View.INVISIBLE
                 binding.pgbSearch.visibility = View.VISIBLE
                 MinhoThread(myHandler, buttonState, ::getBitmapFromURL, bitmapConverter).start()
@@ -62,8 +62,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnClickJkButton() {
         binding.btnJoonKyung.setOnClickListener {
-            if (buttonState.isClicked) {
-                buttonState.isClicked = false
+            if (buttonState.isRunning) {
+                buttonState.isRunning = false
                 binding.ivProfile.visibility = View.INVISIBLE
                 binding.pgbSearch.visibility = View.VISIBLE
                 JkThread(myHandler, buttonState, ::getBitmapFromURL, bitmapConverter).start()
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
     class CountThread(
         private val myHandler: MyHandler,
-        private val profileState: ViewState
+        private val profileState: ThreadState
     ) : Thread() {
         override fun run() {
             repeat(50) {
@@ -123,13 +123,13 @@ class MainActivity : AppCompatActivity() {
                 sleep(1000L)
                 myHandler.sendMessage(message)
             }
-            profileState.isClicked = true
+            profileState.isRunning = true
         }
     }
 
     class MinhoThread(
         private val myHandler: MainActivity.MyHandler,
-        private var buttonState: ViewState,
+        private var buttonState: ThreadState,
         private val getBitmapFromURL: (String) -> Bitmap?,
         private val converter: BitmapConverter
     ) : Thread() {
@@ -148,14 +148,14 @@ class MainActivity : AppCompatActivity() {
                 data = bundle
             }
             sleep(3000L)
-            buttonState.isClicked = true
+            buttonState.isRunning = true
             myHandler.sendMessage(message)
         }
     }
 
     class JkThread(
         private val myHandler: MyHandler,
-        private var buttonState: ViewState,
+        private var buttonState: ThreadState,
         private val getBitmapFromURL: (String) -> Bitmap?,
         private val converter: BitmapConverter
     ) : Thread() {
@@ -171,12 +171,12 @@ class MainActivity : AppCompatActivity() {
                 data = bundle
             }
             sleep(3000L)
-            buttonState.isClicked = true
+            buttonState.isRunning = true
             myHandler.sendMessage(message)
         }
     }
 
-    data class ViewState(var isClicked: Boolean)
+    data class ThreadState(var isRunning: Boolean)
 
     companion object {
         const val MSG_CNT = 1
