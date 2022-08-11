@@ -1,4 +1,4 @@
-package org.techtown.androidsimhwastudy
+package org.techtown.androidsimhwastudy.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

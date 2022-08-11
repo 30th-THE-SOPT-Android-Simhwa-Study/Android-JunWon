@@ -1,4 +1,4 @@
-package org.techtown.androidsimhwastudy
+package org.techtown.androidsimhwastudy.presentation
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,7 +9,8 @@ import android.os.Message
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import org.techtown.androidsimhwastudy.databinding.ActivityMainBinding
+import org.techtown.androidsimhwastudy.databinding.ActivityMyThreadBinding
+import org.techtown.androidsimhwastudy.util.BitmapConverter
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -20,7 +21,7 @@ import java.net.URL
  * massage를 핸들러가 메인쓰레드의 Masseage 큐에 넣어주거나 처리한다.
  * 메세지 큐에 담긴 메세지는 추후에 Looper가 꺼내서 핸들러한테 넘겨서 처리시킴 */
 
-class MainActivity : AppCompatActivity() {
+class MyThreadActivity : AppCompatActivity() {
 
     private val bitmapConverter by lazy {
         BitmapConverter()
@@ -30,10 +31,10 @@ class MainActivity : AppCompatActivity() {
     }
     private var buttonState = ThreadState(true)
     private var profileState = ThreadState(true)
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMyThreadBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMyThreadBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setOnClickProfileImage()
         setOnClickMinhoButton()
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     class MyHandler(
-        private val binding: ActivityMainBinding,
+        private val binding: ActivityMyThreadBinding,
         private val converter: BitmapConverter
     ) : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     class MinhoThread(
-        private val myHandler: MainActivity.MyHandler,
+        private val myHandler: MyHandler,
         private var buttonState: ThreadState,
         private val getBitmapFromURL: (String) -> Bitmap?,
         private val converter: BitmapConverter
