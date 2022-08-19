@@ -4,7 +4,7 @@
     package="org.techtown.androidsimhwastudy">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,14 +15,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidSimhwaStudy"
         tools:targetApi="31">
+
         <activity
-            android:name=".presentation.MyThreadActivity"
+            android:name=".presentation.service.MainActivity2"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <service
+            android:name=".presentation.service.MusicPlayerService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".presentation.MyThreadActivity"
+            android:exported="true">
         </activity>
     </application>
 
