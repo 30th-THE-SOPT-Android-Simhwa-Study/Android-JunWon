@@ -25,7 +25,9 @@ object MusicNotification {
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("UnspecifiedImmutableFlag")
     fun createNotification(
-        context: Context
+        context: Context,
+        notificationContentTitle: String,
+        flag: Int
     ): Notification? {
         // 알림 클릭시 MusicActivity로 이동됨
         val notificationIntent = Intent(context, MusicActivity::class.java)
@@ -69,11 +71,11 @@ object MusicNotification {
         val nextPendingIntent = PendingIntent
             .getService(context, 0, nextIntent, FLAG_MUTABLE)
         // create channel
-        createNotificationChannel(context)
+        createNotificationChannel(context, flag)
         // 알림
         notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle("Music Player")
-            .setContentText("My Music")
+            .setContentText(notificationContentTitle)
             .setSmallIcon(R.drawable.ic_music_24)
             .setOngoing(true) // true 일경우 알림 리스트에서 클릭하거나 좌우로 드래그해도 사라지지 않음
             .addAction(
@@ -105,12 +107,12 @@ object MusicNotification {
         return notification
     }
 
-    private fun createNotificationChannel(context: Context) {
+    private fun createNotificationChannel(context: Context, flag: Int) {
         // Oreo 부터는 Notification Channel을 만들어야 함
         val serviceChannel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
+            flag
         )
         notificationManager =
             context.getSystemService(NotificationManager::class.java)

@@ -1,5 +1,6 @@
 package org.techtown.androidsimhwastudy.presentation.musicplayer
 
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
@@ -13,8 +14,10 @@ import timber.log.Timber
 class MusicPlayerService : Service() {
     private var mediaPlayer: MediaPlayer? = null
     private var musicPlayList: List<Int> = listOf(R.raw.first, R.raw.second, R.raw.third)
-    private var currentMusicNumber = 0
+    private var musicTitleList: List<String> = listOf("One", "Two", "Three")
+    private var currentMusicIndex = 0
     private var currentMusic = R.raw.first
+    private var currentMusicTitle = "One"
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate() {
@@ -28,7 +31,7 @@ class MusicPlayerService : Service() {
         when (intent?.action) {
             Actions.START_FOREGROUND -> {
                 Timber.d("Start Foreground")
-                startForegroundService()
+                startForegroundService(NotificationManager.IMPORTANCE_DEFAULT)
             }
             Actions.STOP_FOREGROUND -> {
                 Timber.d("Stop Foreground")
@@ -39,13 +42,8 @@ class MusicPlayerService : Service() {
                 mediaPlayer?.let { mediaPlayer ->
                     if (mediaPlayer.isPlaying) mediaPlayer.stop()
                 }
-                currentMusicNumber = (currentMusicNumber - 1 + 3) % 3
-                Timber.d("currentMusicNumber: $currentMusicNumber ")
-                currentMusic = musicPlayList[currentMusicNumber]
-                mediaPlayer = MediaPlayer.create(this, currentMusic).apply {
-                    isLooping = false
-                    start()
-                }
+                currentMusicIndex = (currentMusicIndex - 1 + 3) % 3
+                playCurrentMusic()
             }
             Actions.PLAY -> {
                 mediaPlayer?.let { mediaPlayer ->
@@ -63,13 +61,8 @@ class MusicPlayerService : Service() {
                 mediaPlayer?.let { mediaPlayer ->
                     if (mediaPlayer.isPlaying) mediaPlayer.stop()
                 }
-                currentMusicNumber = (currentMusicNumber + 1 + 3) % 3
-                Timber.d("currentMusicNumber: $currentMusicNumber ")
-                currentMusic = musicPlayList[currentMusicNumber]
-                mediaPlayer = MediaPlayer.create(this, currentMusic).apply {
-                    isLooping = false
-                    start()
-                }
+                currentMusicIndex = (currentMusicIndex + 1 + 3) % 3
+                playCurrentMusic()
             }
             else -> Timber.e("intent?.action : ${intent?.action}")
         }
@@ -77,14 +70,26 @@ class MusicPlayerService : Service() {
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
-    private fun startForegroundService() {
-        val notification = MusicNotification.createNotification(this)
+    private fun startForegroundService(flag: Int) {
+        val notification = MusicNotification.createNotification(this, currentMusicTitle, flag)
         startForeground(NOTIFICATION_ID, notification)
     }
 
     private fun stopForegroundService() {
         stopForeground(true)
         stopSelf()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun playCurrentMusic() {
+        Timber.d("currentMusicNumber: $currentMusicIndex ")
+        currentMusic = musicPlayList[currentMusicIndex]
+        currentMusicTitle = musicTitleList[currentMusicIndex]
+        startForegroundService(NotificationManager.IMPORTANCE_LOW)
+        mediaPlayer = MediaPlayer.create(this, currentMusic).apply {
+            isLooping = false
+            start()
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
