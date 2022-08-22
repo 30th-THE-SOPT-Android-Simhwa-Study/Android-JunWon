@@ -1,16 +1,16 @@
-package org.techtown.androidsimhwastudy.presentation.service
+package org.techtown.androidsimhwastudy.presentation.musicplayer
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import org.techtown.androidsimhwastudy.databinding.ActivityMain2Binding
+import org.techtown.androidsimhwastudy.databinding.ActivityMusicBinding
 
-class MainActivity2 : AppCompatActivity() {
+class MusicActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMain2Binding
+    private lateinit var binding: ActivityMusicBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMain2Binding.inflate(layoutInflater)
+        binding = ActivityMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
         clickEvent()
     }
