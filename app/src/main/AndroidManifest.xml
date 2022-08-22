@@ -4,8 +4,15 @@
     package="org.techtown.androidsimhwastudy">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <queries>
+        <!--        패키지 공개 상태-->
+        <package android:name="org.techtown.androidsimhwastudy" />
+    </queries>
+
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,8 +24,8 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".presentation.service.MainActivity2"
-            android:exported="true" >
+            android:name=".presentation.musicplayer.MusicActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,14 +34,18 @@
         </activity>
 
         <service
-            android:name=".presentation.service.MusicPlayerService"
+            android:name=".presentation.musicplayer.MusicPlayerService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".presentation.musicplayer.MyMessageService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
             android:name=".presentation.MyThreadActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>
