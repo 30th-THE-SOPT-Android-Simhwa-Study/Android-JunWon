@@ -1,7 +1,7 @@
-package org.techtown.androidsimhwastudy.presentation.service
+package org.techtown.androidsimhwastudy.presentation.musicplayer
 
 object Actions {
-    private const val prefix = "org.android.androidsubeen."
+    private const val prefix = "org.android.junwon."
     const val MAIN = prefix + "main"
     const val PREV = prefix + "prev"
     const val NEXT = prefix + "next"
